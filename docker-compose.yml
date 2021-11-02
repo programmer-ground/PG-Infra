@@ -1,0 +1,56 @@
+version: "3.8"
+services:
+  mysql:
+    image: mysql:8.0.26
+    container_name: mysql
+    restart: always
+    environment:
+      TZ: Asia/Seoul
+    env_file:
+      - ./mysql/.env
+    ports:
+      - "3306:3306"
+    healthcheck:
+      test: "mysqladmin ping -u root -p$${MYSQL_ROOT_PASSWORD}"
+    volumes:
+      - ./mysql/conf.d:/etc/mysql/conf.d
+      - ./mysql/data:/var/lib/mysql
+    networks:
+      - backend
+
+  vault:
+    image: vault:1.8.2
+    container_name: vault
+    restart: unless-stopped
+    ports:
+      - "8200:8200"
+    cap_add:
+      - IPC_LOCK
+    volumes:
+      - ./vault:/my/vault
+      - ./vault/data:/vault
+    healthcheck:
+      test: "nc -z -v localhost 8200"
+    command: "vault server -config=/my/vault/config/config.hcl"
+    networks:
+      - backend
+
+  consul:
+    image: consul:1.10.2
+    container_name: consul
+    restart: unless-stopped
+    ports:
+      - "8400:8400"
+      - "8500:8500"
+      - "8600:53/udp"
+    healthcheck:
+      test: "curl -f http://localhost:8500/v1/status/leader || exit 1"
+    volumes:
+      - ./consul/data:/consul/data
+      - ./consul/config:/consul/config
+    networks:
+      - backend
+
+networks:
+  backend:
+    driver: bridge
