@@ -2,7 +2,7 @@
 VAULT_ADDR=http://localhost:8200
 
 #TODO : vault KV 스토리지에 환경 변수를 올려서 해당 환경변수로 initalize shell script가 돌아가게끔 변경해야함.
-export ${(grep -v '#.*' mysql/.env | xargs)}
+export $(grep -v '#.*' ./mysql/.env | xargs)
 
 echo "================"
 echo "-- Initializing Vault"
