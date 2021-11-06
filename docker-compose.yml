@@ -13,8 +13,8 @@ services:
     healthcheck:
       test: "mysqladmin ping -u root -p$${MYSQL_ROOT_PASSWORD}"
     volumes:
-      - ./mysql/conf.d:/etc/mysql/conf.d
-      - ./mysql/data:/var/lib/mysql
+      - ./mysql/conf.d:/etc/mysql/conf.d:ro
+      - ./mysql/data:/var/lib/mysql:rw
     networks:
       - backend
 
@@ -28,7 +28,7 @@ services:
       - IPC_LOCK
     volumes:
       - ./vault:/my/vault
-      - ./vault/data:/vault
+      - ./vault/data:/vault:rw
     healthcheck:
       test: "nc -z -v localhost 8200"
     command: "vault server -config=/my/vault/config/config.hcl"
