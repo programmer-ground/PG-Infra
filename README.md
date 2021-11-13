@@ -9,9 +9,9 @@
 │   ├── conf.d
 │   │     └── my.cnf 
 │   ├── data 
-│   └── .env.sample 
+│   └── .env.sample (DB 환경변수 샘플 파일)
 ├── service-script (각 서비스 Vault 설정용 쉘 스크립트)
-│   ├── .env.sample
+│   ├── .env.sample (PG 프로젝트 환경변수 샘플 파일)
 │   ├── setup-pg-auth-vault-approle.sh (Auth Service 초기 설정 쉘 스크립트)
 │   └── setup-pg-main-vault-approle.sh (Main Service 초기 설정 쉘 스크립트)
 ├── vault
