@@ -5,16 +5,14 @@ if [ -z "$VAULT_ROOT_TOKEN" ]; then
   exit 1
 fi
 
-#TODO : vault KV 스토리지에 환경 변수를 올려서 해당 환경변수로 initalize shell script가 돌아가게끔 변경해야함.
 export $(grep -v '#.*' .env | xargs)
-
 VAULT_ADDR=http://localhost:8200
 
-CUSTOM_ROLE_ID="pg-config-service-role-id"
-DATABASE_USER="pg-config-user"
+CUSTOM_ROLE_ID="pg-auth-service-role-id"
+DATABASE_USER="pg-auth-user"
 
-DATABASE_ROLE="pg-config-role"
-DATABASE_ROLE_POLICY="pg-config-policy"
+DATABASE_ROLE="pg-auth-role"
+DATABASE_ROLE_POLICY="pg-auth-policy"
 
 KV_ROLE_POLICY="kv-policy"
 
@@ -41,7 +39,7 @@ echo
 echo "================"
 echo "-- Static KV secret"
 
-echo "setting config environment vaule KV secret ..."
+echo "setting message KV secret ..."
 curl -X POST -H "X-Vault-Token: ${VAULT_ROOT_TOKEN}" -H "Content-Type: application/json" -d "{
     \"GITHUB_APP_CLIENT_ID\": \"${GITHUB_APP_CLIENT_ID}\",
     \"GITHUB_APP_CLIENT_SECRET\": \"${GITHUB_APP_CLIENT_ID}\",
@@ -50,8 +48,7 @@ curl -X POST -H "X-Vault-Token: ${VAULT_ROOT_TOKEN}" -H "Content-Type: applicati
     \"GITHUB_PG_ORG_URL\": \"${GITHUB_PG_ORG_URL}\",
     \"GITHUB_PG_ORG_REPO_URL\": \"${GITHUB_PG_ORG_REPO_URL}\",
     \"JWT_SECRET_KEY\": \"${JWT_SECRET_KEY}\"
-}" ${VAULT_ADDR}/v1/secret/pg-config-service
-
+}" ${VAULT_ADDR}/v1/secret/pg-auth-service
 
 echo "--> setting KV secret policy '${KV_ROLE_POLICY}' ..."
 curl -X POST -i -H "X-Vault-Token:${VAULT_ROOT_TOKEN}" -d '{"policy":"path \"secret/*\" {policy=\"read\"}"}' ${VAULT_ADDR}/v1/sys/policy/${KV_ROLE_POLICY}
@@ -81,5 +78,6 @@ curl -i -H "X-Vault-Token:${CLIENT_TOKEN}" ${VAULT_ADDR}/v1/database/creds/${DAT
 echo
 
 echo "--> testing message KV secret ..."
-curl -i -H "X-Vault-Token:${CLIENT_TOKEN}" ${VAULT_ADDR}/v1/secret/pg-config-service
+curl -i -H "X-Vault-Token:${CLIENT_TOKEN}" ${VAULT_ADDR}/v1/secret/pg-auth-service
 echo
+
