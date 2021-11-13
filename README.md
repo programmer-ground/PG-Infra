@@ -41,6 +41,8 @@ export VAULT_ROOT_TOKEN=s.EFQqF8P57d1QPAVwETJknG6c
 
 `http://localhost:8082` 에서 설정 값 확인 가능
 
+<img width="678" alt="Screen Shot 2021-11-13 at 20 44 46" src="https://user-images.githubusercontent.com/22961251/141642520-490a30b5-9c50-4db0-aef7-949dc268099b.png">
+
 접속은 해당 `VAULT_ROOT_TOKEN=s.EFQqF8P57d1QPAVwETJknG6c` 값으로 로그인하여 볼 수 있음. 
 
 3. Vault 초기 세팅이 끝난 후
@@ -48,4 +50,24 @@ export VAULT_ROOT_TOKEN=s.EFQqF8P57d1QPAVwETJknG6c
 `./service-script/setup-pg-auth-vault-approle.sh && ./service-script/setup-pg-main-vault-approle.sh`
 
 로 세팅하여 사용 가능.
+
+
+## 세팅 확인
+
+`http://localhost:8200/ui/vault/secrets/database/overview` 에 접속해서 아래와 같은 그림이 나오면 정상적으로 DB init까지 완료된 것으로 확인할 수 있다.
+
+<img width="1383" alt="Screen Shot 2021-11-13 at 20 45 11" src="https://user-images.githubusercontent.com/22961251/141642529-42c05c65-2154-4dbf-9f43-b63a057b1ee1.png">
+
+
+`./service-script/setup-pg-auth-vault-approle.sh && ./service-script/setup-pg-main-vault-approle.sh`
+
+까지 끝난 케이스면
+
+
+<img width="1382" alt="Screen Shot 2021-11-13 at 20 47 20" src="https://user-images.githubusercontent.com/22961251/141642587-a27cb8cc-3372-46da-a35f-3c1b4be8972d.png">
+
+
+위와 같이 Role이 2개로 추가된 것을 볼 수 있다. 
+
+
 
