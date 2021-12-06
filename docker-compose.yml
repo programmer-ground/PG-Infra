@@ -16,11 +16,13 @@ services:
       - ./mysql/conf.d:/etc/mysql/conf.d:ro
       - ./mysql/data:/var/lib/mysql:rw
     networks:
-      - backend
+      - backend-proxy-net
 
   vault:
     image: vault:1.8.2
     container_name: vault
+    depends_on: 
+      - mysql
     restart: unless-stopped
     ports:
       - "8200:8200"
@@ -29,15 +31,23 @@ services:
     volumes:
       - ./vault:/my/vault
       - ./vault/data:/vault:rw
+      - ./unseal-vault-enable-approle-databases.sh:/vault/vault-init.sh
     healthcheck:
       test: "nc -z -v localhost 8200"
-    command: "vault server -config=/my/vault/config/config.hcl"
+    entrypoint: ["sh", "-c"]
+    #command: vault server -config=/my/vault/config/config.hcl && sh -c /vault/vault-init.sh
+    command:
+     - |
+        vault server -config=/my/vault/config/config.hcl
+        /vault/vault-init.sh
     networks:
-      - backend
+      - backend-proxy-net
 
   consul:
     image: consul:1.10.2
     container_name: consul
+    depends_on: 
+      - mysql
     restart: unless-stopped
     ports:
       - "8400:8400"
@@ -49,8 +59,8 @@ services:
       - ./consul/data:/consul/data
       - ./consul/config:/consul/config
     networks:
-      - backend
+      - backend-proxy-net
 
 networks:
-  backend:
+  backend-proxy-net:
     driver: bridge
