@@ -42,7 +42,7 @@ echo "-- Static KV secret"
 echo "setting message KV secret ..."
 curl -X POST -H "X-Vault-Token: ${VAULT_ROOT_TOKEN}" -H "Content-Type: application/json" -d "{
     \"GITHUB_APP_CLIENT_ID\": \"${GITHUB_APP_CLIENT_ID}\",
-    \"GITHUB_APP_CLIENT_SECRET\": \"${GITHUB_APP_CLIENT_ID}\",
+    \"GITHUB_APP_CLIENT_SECRET\": \"${GITHUB_APP_CLIENT_SECRET}\",
     \"GITHUB_APP_SCOPE\": \"${GITHUB_APP_SCOPE}\",
     \"GITHUB_BOT_TOKEN\": \"${GITHUB_BOT_TOKEN}\",
     \"GITHUB_PG_ORG_URL\": \"${GITHUB_PG_ORG_URL}\",
